@@ -2,14 +2,11 @@ package extensions;
 
 import java.io.*;
 import java.net.*;
-import java.nio.*;
-import java.nio.channels.*;
 import java.util.regex.Pattern;
 
 import dareka.common.Logger;
 import dareka.extensions.*;
 import dareka.processor.*;
-import dareka.processor.impl.Cache;
 
 /**
  * 串設定を http://localhost:8080/proxy.pac で読み込めるようにする拡張
@@ -49,18 +46,7 @@ public class nlProxyPac implements Extension2, Processor {
     public Resource onRequest(HttpRequestHeader requestHeader, Socket browser)
         throws IOException {
 
-        FileChannel ch = new FileInputStream("./proxy.pac").getChannel();
-        ByteBuffer buffer = ByteBuffer.allocate((int)ch.size());
-
-        ch.read(buffer);
-        buffer.clear();
-        byte pacData[] = new byte[buffer.capacity()];
-        buffer.get(pacData);
-
-        ch.close();
-
-        StringResource r = new StringResource(pacData);
-        r.setResponseHeader("Content-Type", "text/plain");
+        URLResource r = new URLResource(new File("./proxy.pac").toURI().toString());
         Logger.info("nlProxyPact ver1.0: return proxy.pac");
 
         return r;
