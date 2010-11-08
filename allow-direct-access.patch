@@ -1,0 +1,22 @@
+diff --git a/dareka/processor/HttpRequestHeader.java b/dareka/processor/HttpRequestHeader.java
+index 225aa0d..e5b1f62 100644
+--- a/dareka/processor/HttpRequestHeader.java
++++ b/dareka/processor/HttpRequestHeader.java
+@@ -16,7 +16,7 @@ public class HttpRequestHeader extends HttpHeader {
+      * </pre>
+      */
+     private static final Pattern PROXY_REQUEST_LINE_PATTERN =
+-            Pattern.compile("^([A-Z]+) ((?:http://)?([^/:]+)(?::(\\d+))?(/\\S*)?) (HTTP/1\\.[01])\r\n");
++            Pattern.compile("^([A-Z]+) ((?:http://)?([^/:]+)?(?::(\\d+))?(/\\S*)?) (HTTP/1\\.[01])\r\n");
+     private String method;
+     private String uri;
+     private String host;
+@@ -39,7 +39,7 @@ public class HttpRequestHeader extends HttpHeader {
+         if (m.find()) {
+             method = m.group(1);
+             uri = m.group(2);
+-            host = m.group(3);
++            host = m.group(3) == null ? "" : m.group(3);
+             port = m.group(4) == null ? 80 : Integer.parseInt(m.group(4));
+             path = m.group(5) == null ? "" : m.group(5);
+             version = m.group(6);
